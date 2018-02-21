@@ -2,56 +2,38 @@ package main
 
 import (
 	"flag"
+	"github.com/weakish/gosugar"
 	"os"
-	"os/exec"
 	"strings"
-	"syscall"
 )
 
 func main() {
 	var simple *bool = flag.Bool("simple", false, "use -r instead of -a")
 	flag.Parse()
 
-	var sourceDir string = os.Args[1]
-	var destDir string = os.Args[2]
-	if !strings.HasSuffix(sourceDir, "/") {
-		sourceDir += "/"
-	}
+	runRsync(*simple)
+}
 
-	defaultArgs := []string{"-a", "-z", "--partial", "--delete"}
-	simpleArgs := []string{"-r", "-z", "--partial", "--delete"}
-	var args []string
-	if *simple {
-		if len(os.Args) != 4 {
-			printUsage()
-		} else {
-			args = append(simpleArgs, sourceDir, destDir)
-		}
+func runRsync(isSimple bool) {
+	var simple int = gosugar.Btoi(isSimple)
+
+	var opt string = [2]string{"-a", "-r"}[simple]
+	var args []string = []string{"rsync", opt, "-z", "--partial", "--delete"}
+
+	if len(os.Args) != 3 + simple {
+		printUsage()
 	} else {
-		if len(os.Args) != 3 {
-			printUsage()
-		} else {
-			args = append(defaultArgs, sourceDir, destDir)
+		var sourceDir string = os.Args[1 + simple]
+		if !strings.HasSuffix(sourceDir, "/") {
+			sourceDir += "/"
 		}
-	}
-
-	err := syscall.Exec(which("echo"), args, os.Environ())
-	panicIf(err)
-
-}
-func panicIf(err error) {
-	if err != nil {
-		panic(err)
+		var destDir string = os.Args[2 + simple]
+		args = append(args, sourceDir, destDir)
+		gosugar.Exec(args)
 	}
 }
-func which(command string) string {
-	var commandPath string
-	commandPath, err := exec.LookPath(command)
-	panicIf(err)
 
-	return commandPath
-}
 func printUsage() {
-	os.Stderr.WriteString("Usage: r3c [--simple] directory_1 directory_2")
+	os.Stderr.WriteString("Usage: r3c [--simple] directory_1 directory_2\n")
 	os.Exit(64)
 }
