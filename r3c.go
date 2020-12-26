@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/weakish/gosugar"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -19,25 +20,26 @@ func runRsync(isSimple bool, enableCompress bool) {
 	var simple int = gosugar.Btoi(isSimple)
 
 	var opt string = [2]string{"-a", "-r"}[simple]
-	var args []string = []string{"rsync", opt, "--partial", "--delete"}
+	var args []string = []string{opt, "--partial", "--delete"}
 	if enableCompress {
-		args = append(args, "-z");
+		args = append(args, "-z")
 	}
 
-	if len(os.Args) != 3 + simple + gosugar.Btoi(enableCompress) {
+	if len(os.Args) != 3+simple+gosugar.Btoi(enableCompress) {
 		printUsage()
 	} else {
-		var sourceDir string = os.Args[1 + simple]
+		var sourceDir string = os.Args[1+simple]
 		if !strings.HasSuffix(sourceDir, "/") {
 			sourceDir += "/"
 		}
-		var destDir string = os.Args[2 + simple]
+		var destDir string = os.Args[2+simple]
 		args = append(args, sourceDir, destDir)
-		gosugar.Exec(args)
+		cmd := exec.Command("rsync", args...)
+		_ = cmd.Run()
 	}
 }
 
 func printUsage() {
-	os.Stderr.WriteString("Usage: r3c [-simple] [-compress] directory_1 directory_2\n")
+	_, _ = os.Stderr.WriteString("Usage: r3c [-simple] [-compress] directory_1 directory_2\n")
 	os.Exit(64)
 }
