@@ -11,18 +11,22 @@ import (
 func main() {
 	var simple *bool = flag.Bool("simple", false, "use -r instead of -a")
 	var compress *bool = flag.Bool("compress", false, "enable compression")
+	var progress *bool = flag.Bool("progress", false, "show progress")
 	flag.Parse()
 
-	runRsync(*simple, *compress)
+	runRsync(*simple, *compress, *progress)
 }
 
-func runRsync(isSimple bool, enableCompress bool) {
+func runRsync(isSimple, enableCompress, showProgress bool) {
 	var simple int = gosugar.Btoi(isSimple)
 
 	var opt string = [2]string{"-a", "-r"}[simple]
 	var args []string = []string{opt, "--partial", "--delete"}
 	if enableCompress {
 		args = append(args, "-z")
+	}
+	if showProgress {
+		args = append(args, "--progress")
 	}
 
 	if len(os.Args) != 3+simple+gosugar.Btoi(enableCompress) {

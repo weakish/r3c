@@ -21,6 +21,7 @@ For rsync users:
 - Without `-simple`, `-a --partial --delete`.
 - With `-simple`, same as above, but using `-r` instead of `-a`.
 - With `-compress`, passing the `-z` option.
+- With `-progress`, passing the `--progress` option.
 
 ## License
 
