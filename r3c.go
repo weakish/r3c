@@ -34,7 +34,22 @@ func runRsync(isSimple, enableCompress, showProgress bool) {
 	} else {
 		var sourceDir string = os.Args[1+simple]
 		if !strings.HasSuffix(sourceDir, "/") {
-			sourceDir += "/"
+			info, err := os.Stat(sourceDir)
+			if err == nil {
+				if info.IsDir() {
+					sourceDir += "/"
+				} else if info.Mode().IsRegular() {
+					// pass
+				} else {
+					panic("r3c only supports regular file or directory: " + sourceDir)
+				}
+			} else {
+				if os.IsNotExist(err) {
+					gosugar.Expect(err, sourceDir+" not exist!")
+				} else {
+					panic(err)
+				}
+			}
 		}
 		var destDir string = os.Args[2+simple]
 		args = append(args, sourceDir, destDir)
