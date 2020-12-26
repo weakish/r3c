@@ -23,6 +23,19 @@ For rsync users:
 - With `-compress`, passing the `-z` option.
 - With `-progress`, passing the `--progress` option.
 
+## Install
+
+Compile from the source and install to `/usr/local/bin`:
+
+```sh
+make
+make install
+```
+
+Depending on your file system permission configuration, you may need to prefix the `make install` command with `sudo`.
+If you want to install r3c to other directory, please edit the `config.mk` file.
+The Makefile is compatible with both GNU and BSD make.
+
 ## License
 
 0BSD
