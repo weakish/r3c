@@ -2,22 +2,24 @@ package main
 
 import (
 	"flag"
-	"github.com/weakish/gosugar"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/weakish/gosugar"
 )
 
 func main() {
 	var simple *bool = flag.Bool("simple", false, "use -r instead of -a")
 	var compress *bool = flag.Bool("compress", false, "enable compression")
 	var progress *bool = flag.Bool("progress", false, "show progress")
+	var dry *bool = flag.Bool("dry", false, "dry run")
 	flag.Parse()
 
-	runRsync(*simple, *compress, *progress)
+	runRsync(*simple, *compress, *progress, *dry)
 }
 
-func runRsync(isSimple, enableCompress, showProgress bool) {
+func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool) {
 	var simple int = gosugar.Btoi(isSimple)
 
 	var opt string = [2]string{"-a", "-r"}[simple]
@@ -29,10 +31,11 @@ func runRsync(isSimple, enableCompress, showProgress bool) {
 		args = append(args, "--progress")
 	}
 
-	if len(os.Args) != 3+simple+gosugar.Btoi(enableCompress) {
+	var optLen = simple + gosugar.Btoi(enableCompress) + gosugar.Btoi(dryRun)
+	if len(os.Args) != 1+optLen+2 {
 		printUsage()
 	} else {
-		var sourceDir string = os.Args[1+simple]
+		var sourceDir string = os.Args[1+optLen]
 		if !strings.HasSuffix(sourceDir, "/") {
 			info, err := os.Stat(sourceDir)
 			if err == nil {
@@ -51,10 +54,14 @@ func runRsync(isSimple, enableCompress, showProgress bool) {
 				}
 			}
 		}
-		var destDir string = os.Args[2+simple]
+		var destDir string = os.Args[2+optLen]
 		args = append(args, sourceDir, destDir)
 		cmd := exec.Command("rsync", args...)
-		_ = cmd.Run()
+		if dryRun {
+			_, _ = os.Stderr.WriteString(cmd.String())
+		} else {
+			_ = cmd.Run()
+		}
 	}
 }
 

@@ -12,7 +12,7 @@ Thus I wrote this wrapper.
 
 will sync `dir1` and `dir2`. That's it.
 
-In some cases, if you do not care about unix features like permissions, links, etc, you can add an `--simple` option:
+In some cases, if you do not care about unix features like permissions, links, etc, you can add a `-simple` option:
 
     r3c -simple dir1 dir2
 
@@ -22,6 +22,7 @@ For rsync users:
 - With `-simple`, same as above, but using `-r` instead of `-a`.
 - With `-compress`, passing the `-z` option.
 - With `-progress`, passing the `--progress` option.
+- With `-dry`, just print out the generated rsync command line and exit.
 
 ## Install
 
@@ -33,7 +34,7 @@ make install
 ```
 
 Depending on your file system permission configuration, you may need to prefix the `make install` command with `sudo`.
-If you want to install r3c to other directory, please edit the `config.mk` file.
+If you want to install r3c to another directory, please edit the `config.mk` file.
 The Makefile is compatible with both GNU and BSD make.
 
 ## License
