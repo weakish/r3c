@@ -3,7 +3,7 @@ include config.mk
 r3c: r3c.go
 	@go build
 
-install:
+install: r3c
 	@mkdir -p ${PREFIX}/bin
 	@install r3c  ${PREFIX}/bin
 
