@@ -20,6 +20,7 @@ For rsync users:
 
 - Without `-simple`, `-a --partial --delete`.
 - With `-simple`, same as above, but using `-r` instead of `-a`.
+- With `-nodel`, not passing the `--delete` option.
 - With `-compress`, passing the `-z` option.
 - With `-progress`, passing the `--progress` option.
 - With `-dry`, just print out the generated rsync command line and exit.

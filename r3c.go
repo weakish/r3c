@@ -14,16 +14,20 @@ func main() {
 	var compress *bool = flag.Bool("compress", false, "enable compression")
 	var progress *bool = flag.Bool("progress", false, "show progress")
 	var dry *bool = flag.Bool("dry", false, "dry run")
+	var nodel *bool = flag.Bool("nodel", false, "do not delete extraneous files from dest dirs")
 	flag.Parse()
 
-	runRsync(*simple, *compress, *progress, *dry)
+	runRsync(*simple, *compress, *progress, *dry, !*nodel)
 }
 
-func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool) {
+func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool, delete bool) {
 	var simple int = gosugar.Btoi(isSimple)
 
 	var opt string = [2]string{"-a", "-r"}[simple]
-	var args []string = []string{opt, "--partial", "--delete"}
+	var args []string = []string{opt, "--partial"}
+	if delete {
+		args = append(args, "--delete")
+	}
 	if enableCompress {
 		args = append(args, "-z")
 	}
@@ -31,7 +35,7 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 		args = append(args, "--progress")
 	}
 
-	var optLen = simple + gosugar.Btoi(enableCompress) + gosugar.Btoi(dryRun)
+	var optLen = simple + gosugar.Btoi(enableCompress) + gosugar.Btoi(dryRun) + gosugar.Btoi(!delete)
 	if len(os.Args) != 1+optLen+2 {
 		printUsage()
 	} else {
@@ -66,6 +70,6 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 }
 
 func printUsage() {
-	_, _ = os.Stderr.WriteString("Usage: r3c [-simple] [-compress] directory_1 directory_2\n")
+	_, _ = os.Stderr.WriteString("Usage: r3c [-simple] [-compress] [-progress] [-nodel] [-dry] directory_1 directory_2\n")
 	os.Exit(64)
 }
