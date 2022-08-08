@@ -46,13 +46,18 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 				if info.IsDir() {
 					sourceDir += "/"
 				} else if info.Mode().IsRegular() {
-					// pass
+					// r3c is designed to be used with directories.
+					// But it also tolerates a local file as the source.
 				} else {
 					panic("r3c only supports regular file or directory: " + sourceDir)
 				}
 			} else {
 				if os.IsNotExist(err) {
-					gosugar.Expect(err, sourceDir+" not exist!")
+					// Directory does not exist.
+					// r3c assumes that the source is a remote directory and feels lucky.
+					// If the source points to a remote file or if the source does not exist,
+					// no sync will be performed, which is safe.
+					sourceDir += "/"
 				} else {
 					panic(err)
 				}
