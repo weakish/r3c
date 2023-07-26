@@ -24,7 +24,7 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 	var simple int = gosugar.Btoi(isSimple)
 
 	var opt string = [2]string{"-a", "-r"}[simple]
-	var args []string = []string{opt, "--partial"}
+	var args []string = []string{opt, "--partial", "--sparse"}
 	if delete {
 		args = append(args, "--delete")
 	}
