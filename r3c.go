@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	var simple *bool = flag.Bool("simple", false, "use -r instead of -a")
+	var simple *bool = flag.Bool("simple", false, "use -rt instead of -a")
 	var compress *bool = flag.Bool("compress", false, "enable compression")
 	var progress *bool = flag.Bool("progress", false, "show progress")
 	var dry *bool = flag.Bool("dry", false, "dry run")
@@ -23,7 +23,7 @@ func main() {
 func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool, delete bool) {
 	var simple int = gosugar.Btoi(isSimple)
 
-	var opt string = [2]string{"-a", "-r"}[simple]
+	var opt string = [2]string{"-a", "-rt"}[simple]
 	var args []string = []string{opt, "--partial"}
 	if delete {
 		args = append(args, "--delete")
