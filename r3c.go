@@ -35,7 +35,7 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 		args = append(args, "--progress")
 	}
 
-	var optLen = simple + gosugar.Btoi(enableCompress) + gosugar.Btoi(dryRun) + gosugar.Btoi(!delete)
+	var optLen = simple + gosugar.Btoi(enableCompress) + gosugar.Btoi(showProgress) + gosugar.Btoi(dryRun) + gosugar.Btoi(!delete)
 	if len(os.Args) != 1+optLen+2 {
 		printUsage()
 	} else {
