@@ -69,6 +69,9 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 		if dryRun {
 			_, _ = os.Stderr.WriteString(cmd.String())
 		} else {
+			cmd.Stdin = os.Stdin
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
 			_ = cmd.Run()
 		}
 	}
