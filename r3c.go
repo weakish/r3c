@@ -36,10 +36,10 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 	}
 
 	var optLen = simple + gosugar.Btoi(enableCompress) + gosugar.Btoi(showProgress) + gosugar.Btoi(dryRun) + gosugar.Btoi(!delete)
-	if len(os.Args) != 1+optLen+2 {
+	if len(os.Args) != 1+optLen+2 { // r3c + options + source + dest
 		printUsage()
 	} else {
-		var sourceDir string = os.Args[1+optLen]
+		var sourceDir string = os.Args[1+optLen] // following r3c + options
 		if !strings.HasSuffix(sourceDir, "/") {
 			info, err := os.Stat(sourceDir)
 			if err == nil {
@@ -63,7 +63,7 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 				}
 			}
 		}
-		var destDir string = os.Args[2+optLen]
+		var destDir string = os.Args[1+optLen+1] // following r3c + options + source
 		args = append(args, sourceDir, destDir)
 		cmd := exec.Command("rsync", args...)
 		if dryRun {
