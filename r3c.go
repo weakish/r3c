@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	var simple *bool = flag.Bool("simple", false, "use -r instead of -a")
+	var simple *bool = flag.Bool("simple", false, "use -rt instead of -a")
 	var compress *bool = flag.Bool("compress", false, "enable compression")
 	var progress *bool = flag.Bool("progress", false, "show progress")
 	var dry *bool = flag.Bool("dry", false, "dry run")
@@ -23,8 +23,9 @@ func main() {
 func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool, delete bool) {
 	var simple int = gosugar.Btoi(isSimple)
 
-	var opt string = [2]string{"-a", "-r"}[simple]
+  var opt string = [2]string{"-a", "-rt"}[simple]
 	var args []string = []string{opt, "--partial", "--sparse"}
+
 	if delete {
 		args = append(args, "--delete")
 	}
@@ -35,11 +36,11 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 		args = append(args, "--progress")
 	}
 
-	var optLen = simple + gosugar.Btoi(enableCompress) + gosugar.Btoi(dryRun) + gosugar.Btoi(!delete)
-	if len(os.Args) != 1+optLen+2 {
+	var optLen = simple + gosugar.Btoi(enableCompress) + gosugar.Btoi(showProgress) + gosugar.Btoi(dryRun) + gosugar.Btoi(!delete)
+	if len(os.Args) != 1+optLen+2 { // r3c + options + source + dest
 		printUsage()
 	} else {
-		var sourceDir string = os.Args[1+optLen]
+		var sourceDir string = os.Args[1+optLen] // following r3c + options
 		if !strings.HasSuffix(sourceDir, "/") {
 			info, err := os.Stat(sourceDir)
 			if err == nil {
@@ -63,12 +64,15 @@ func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool
 				}
 			}
 		}
-		var destDir string = os.Args[2+optLen]
+		var destDir string = os.Args[1+optLen+1] // following r3c + options + source
 		args = append(args, sourceDir, destDir)
 		cmd := exec.Command("rsync", args...)
 		if dryRun {
 			_, _ = os.Stderr.WriteString(cmd.String())
 		} else {
+			cmd.Stdin = os.Stdin
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
 			_ = cmd.Run()
 		}
 	}
