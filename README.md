@@ -4,7 +4,7 @@
 
 I always have problem to remember the weired semantic difference between `rsync -r dir1/ ...` and `rsync -r dir ...`.
 
-Thus I wrote this wrapper.
+Thus, I wrote this wrapper.
 
 ## Usage
 
@@ -24,6 +24,12 @@ For rsync users:
 - With `-compress`, passing the `-z` option.
 - With `-progress`, passing the `--progress` option.
 - With `-dry`, just print out the generated rsync command line and exit.
+
+## Bugs
+
+Since r3c uses the `--sparse` option of rsync for better support of sparse files, it will corrupt the files on a Solaris "tmpfs" destination.
+Please do not use r3c when the destination is on a Solaris "tmpfs" file system.
+If you do want to do so, please use r3c `v0.0.0`, which does not use the `--sparse` option.
 
 ## Install
 
