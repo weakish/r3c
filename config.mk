@@ -1,2 +1,2 @@
 PREFIX = /usr/local
-# PREFIX = "$HOME/.local"
+# PREFIX = ${HOME}/.local
