@@ -1,14 +1,18 @@
-include config.mk
+NAME=r3c
 
-r3c: r3c.go
+PREFIX?=/usr/local
+BINDIR=${PREFIX}/bin
+
+
+${NAME}: ${NAME}.go
 	@go build
 
-install: r3c
-	@mkdir -p ${PREFIX}/bin
-	@install r3c  ${PREFIX}/bin
+install: ${NAME}
+	@mkdir -p ${BINDIR}
+	@install -c -m 755 ${NAME}  ${BINDIR}/${NAME}
 
 uninstall:
-	@rm -f ${PREFIX}/bin/r3c
+	@rm -f ${bindir}/${NAME}
 
 clean:
-	@rm -f r3c
+	@rm -f ${NAME}

@@ -41,7 +41,12 @@ make install
 ```
 
 Depending on your file system permission configuration, you may need to prefix the `make install` command with `sudo`.
-If you want to install r3c to another directory, please edit the `config.mk` file.
+Change `PREFIX` to install r3c to another directory, for example:
+
+```sh
+make PREFIX=~/.local install
+```
+
 The Makefile is compatible with both GNU and BSD make.
 
 ## License
