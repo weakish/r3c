@@ -41,13 +41,29 @@ make install
 ```
 
 Depending on your file system permission configuration, you may need to prefix the `make install` command with `sudo`.
-Change `PREFIX` to install r3c to another directory, for example:
+Change `PREFIX` to install r3c to another directory.
+For example:
 
 ```sh
 make PREFIX=~/.local install
 ```
 
 The Makefile is compatible with both GNU and BSD make.
+
+## Uninstall
+
+Just run:
+
+```
+make uninstall
+```
+
+If you have changed the `PREFIX` variable when installing, you need to use the same value when uninstalling.
+For example:
+
+```sh
+make PREFIX=~/.local uninstall
+```
 
 ## License
 
