@@ -10,11 +10,11 @@ import (
 )
 
 func main() {
-	var simple *bool = flag.Bool("simple", false, "use -rt instead of -a")
-	var compress *bool = flag.Bool("compress", false, "enable compression")
-	var progress *bool = flag.Bool("progress", false, "show progress")
-	var dry *bool = flag.Bool("dry", false, "dry run")
-	var nodel *bool = flag.Bool("nodel", false, "do not delete extraneous files from dest dirs")
+	var simple = flag.Bool("simple", false, "use -rt instead of -a")
+	var compress = flag.Bool("compress", false, "enable compression")
+	var progress = flag.Bool("progress", false, "show progress")
+	var dry = flag.Bool("dry", false, "dry run")
+	var nodel = flag.Bool("nodel", false, "do not delete extraneous files from dest dirs")
 	flag.Parse()
 
 	runRsync(*simple, *compress, *progress, *dry, !*nodel)
@@ -23,7 +23,7 @@ func main() {
 func runRsync(isSimple bool, enableCompress bool, showProgress bool, dryRun bool, delete bool) {
 	var simple int = gosugar.Btoi(isSimple)
 
-  var opt string = [2]string{"-a", "-rt"}[simple]
+	var opt string = [2]string{"-a", "-rt"}[simple]
 	var args []string = []string{opt, "--partial", "--sparse"}
 
 	if delete {

@@ -68,6 +68,3 @@ make PREFIX=~/.local uninstall
 ## License
 
 0BSD
-
-
-

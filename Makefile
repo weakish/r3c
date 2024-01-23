@@ -12,7 +12,7 @@ install: ${NAME}
 	@install -c -m 755 ${NAME}  ${BINDIR}/${NAME}
 
 uninstall:
-	@rm -f ${bindir}/${NAME}
+	@rm -f ${BINDIR}/${NAME}
 
 clean:
 	@rm -f ${NAME}
